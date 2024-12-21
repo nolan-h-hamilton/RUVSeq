@@ -24,10 +24,11 @@ setMethod(
             }
             m <- nrow(Y)
             n <- ncol(Y)
-            svdWa <- svd(Ycenter[, cIdx])
+            svdWa <- svd(Ycenter[, cIdx])              
             first <- 1 + drop
             k <- min(k, max(which(svdWa$d > tolerance)))
             W <- svdWa$u[, (first:k), drop = FALSE]
+            D = svdWa$d[(first:k)]
             alpha <- solve(t(W) %*% W) %*% t(W) %*% Y
             correctedY <- Y - W %*% alpha
             if(!isLog && all(.isWholeNumber(x))) {
@@ -39,7 +40,7 @@ setMethod(
                 }
             }
             colnames(W) <- paste("W", seq(1, ncol(W)), sep="_")
-            return(list(W = W, normalizedCounts = t(correctedY)))
+            return(list(W = W, D = D, normalizedCounts = t(correctedY)))
           }
           )
 
